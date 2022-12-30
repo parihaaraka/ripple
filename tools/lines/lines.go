@@ -46,7 +46,7 @@ func main() {
 	checkErr(err)
 	account, err := data.NewAccountFromAddress(os.Args[1])
 	checkErr(err)
-	result, err := remote.AccountLines(*account, "closed")
+	result, err := remote.AccountLines(*account, "closed", "")
 	checkErr(err)
 	// fmt.Println(*result.LedgerSequence) //TODO: wait for nikb fix
 	for _, line := range result.Lines {

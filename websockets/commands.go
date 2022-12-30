@@ -231,6 +231,7 @@ type AccountInfoResult struct {
 type AccountLinesCommand struct {
 	*Command
 	Account     data.Account        `json:"account"`
+	Peer        *data.Account       `json:"peer,omitempty"`
 	Limit       uint32              `json:"limit"`
 	LedgerIndex interface{}         `json:"ledger_index,omitempty"`
 	Marker      *data.Hash256       `json:"marker,omitempty"`
@@ -298,4 +299,96 @@ type FeeResult struct {
 	} `json:"levels"`
 	MaxQueueSize uint32 `json:"max_queue_size,string"`
 	Status       string `json:"status"`
+}
+
+type ServerInfoCommand struct {
+	*Command
+	Result *ServerInfoResult `json:"result,omitempty"`
+}
+
+type ServerInfoResult struct {
+	Info struct {
+		BuildVersion          string `json:"build_version"`
+		CompleteLedgers       string `json:"complete_ledgers"`
+		Hostid                string `json:"hostid"`
+		InitialSyncDurationUs string `json:"initial_sync_duration_us"`
+		IoLatencyMs           int    `json:"io_latency_ms"`
+		LastClose             struct {
+			ConvergeTimeS float64 `json:"converge_time_s"`
+			Proposers     int     `json:"proposers"`
+		} `json:"last_close"`
+		LoadFactor      int    `json:"load_factor"`
+		PubkeyNode      string `json:"pubkey_node"`
+		PublishedLedger string `json:"published_ledger"`
+		Reporting       struct {
+			EtlSources []struct {
+				Connected              bool   `json:"connected"`
+				GrpcPort               string `json:"grpc_port"`
+				Ip                     string `json:"ip"`
+				LastMessageArrivalTime string `json:"last_message_arrival_time"`
+				ValidatedLedgersRange  string `json:"validated_ledgers_range"`
+				WebsocketPort          string `json:"websocket_port"`
+			} `json:"etl_sources"`
+			IsWriter        bool   `json:"is_writer"`
+			LastPublishTime string `json:"last_publish_time"`
+		} `json:"reporting"`
+		ServerState           string `json:"server_state"`
+		ServerStateDurationUs string `json:"server_state_duration_us"`
+		StateAccounting       struct {
+			Connected struct {
+				DurationUs  string `json:"duration_us"`
+				Transitions string `json:"transitions"`
+			} `json:"connected"`
+			Disconnected struct {
+				DurationUs  string `json:"duration_us"`
+				Transitions string `json:"transitions"`
+			} `json:"disconnected"`
+			Full struct {
+				DurationUs  string `json:"duration_us"`
+				Transitions string `json:"transitions"`
+			} `json:"full"`
+			Syncing struct {
+				DurationUs  string `json:"duration_us"`
+				Transitions string `json:"transitions"`
+			} `json:"syncing"`
+			Tracking struct {
+				DurationUs  string `json:"duration_us"`
+				Transitions string `json:"transitions"`
+			} `json:"tracking"`
+		} `json:"state_accounting"`
+		Time            string `json:"time"`
+		Uptime          int    `json:"uptime"`
+		ValidatedLedger struct {
+			Age            int     `json:"age"`
+			BaseFeeXrp     float64 `json:"base_fee_xrp"`
+			Hash           string  `json:"hash"`
+			ReserveBaseXrp int     `json:"reserve_base_xrp"`
+			ReserveIncXrp  int     `json:"reserve_inc_xrp"`
+			Seq            int     `json:"seq"`
+		} `json:"validated_ledger"`
+		ValidationQuorum int `json:"validation_quorum"`
+	} `json:"info"`
+	Status string `json:"status"`
+}
+
+type DepositAuthorizedCommand struct {
+	*Command
+	Source      data.Account             `json:"source_account"`
+	Dest        data.Account             `json:"destination_account"`
+	LedgerIndex interface{}              `json:"ledger_index,omitempty"`
+	Result      *DepositAuthorizedResult `json:"result,omitempty"`
+}
+
+type DepositAuthorizedResult struct {
+	DepositAuthorized  bool   `json:"deposit_authorized"`
+	DestinationAccount string `json:"destination_account"`
+	LedgerHash         string `json:"ledger_hash"`
+	LedgerIndex        int    `json:"ledger_index"`
+	SourceAccount      string `json:"source_account"`
+	Status             string `json:"status"`
+	Validated          bool   `json:"validated"`
+	Warnings           []struct {
+		Id      int    `json:"id"`
+		Message string `json:"message"`
+	} `json:"warnings"`
 }

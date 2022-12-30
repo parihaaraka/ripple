@@ -381,8 +381,37 @@ func (r *Remote) AccountInfo(a data.Account) (*AccountInfoResult, error) {
 	return cmd.Result, nil
 }
 
+// Synchronously requests server info
+func (r *Remote) ServerInfo() (*ServerInfoResult, error) {
+	cmd := &ServerInfoCommand{
+		Command: newCommand("server_info"),
+	}
+	r.outgoing <- cmd
+	<-cmd.Ready
+	if cmd.CommandError != nil {
+		return nil, cmd.CommandError
+	}
+	return cmd.Result, nil
+}
+
+// Synchronously requests DepositAuthorized
+func (r *Remote) DepositAuthorized(source, dest data.Account, ledger interface{}) (*DepositAuthorizedResult, error) {
+	cmd := &DepositAuthorizedCommand{
+		Command:     newCommand("deposit_authorized"),
+		Source:      source,
+		Dest:        dest,
+		LedgerIndex: ledger,
+	}
+	r.outgoing <- cmd
+	<-cmd.Ready
+	if cmd.CommandError != nil {
+		return nil, cmd.CommandError
+	}
+	return cmd.Result, nil
+}
+
 // Synchronously requests account line info
-func (r *Remote) AccountLines(account data.Account, ledgerIndex interface{}) (*AccountLinesResult, error) {
+func (r *Remote) AccountLines(account data.Account, ledgerIndex interface{}, peer string) (*AccountLinesResult, error) {
 	var (
 		lines  data.AccountLineSlice
 		marker *data.Hash256
@@ -395,6 +424,15 @@ func (r *Remote) AccountLines(account data.Account, ledgerIndex interface{}) (*A
 			Marker:      marker,
 			LedgerIndex: ledgerIndex,
 		}
+
+		if peer != "" {
+			p, err := data.NewAccountFromAddress(peer)
+			if err != nil {
+				return nil, fmt.Errorf("AccountLines: Invalid address[%s]: %w", p, err)
+			}
+			cmd.Peer = p
+		}
+
 		r.outgoing <- cmd
 		<-cmd.Ready
 		switch {
