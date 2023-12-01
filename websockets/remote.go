@@ -46,7 +46,15 @@ func NewRemote(endpoint string) (*Remote, error) {
 	if err != nil {
 		return nil, err
 	}
-	c, err := net.DialTimeout("tcp", u.Host, dialTimeout)
+	dialHost := u.Host
+	if u.Port() == "" {
+		if u.Scheme == "wss" {
+			dialHost = dialHost + ":443"
+		} else if u.Scheme == "ws" {
+			dialHost = dialHost + ":80"
+		}
+	}
+	c, err := net.DialTimeout("tcp", dialHost, dialTimeout)
 	if err != nil {
 		return nil, err
 	}
