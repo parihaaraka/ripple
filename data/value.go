@@ -460,9 +460,17 @@ func (v Value) Float() float64 {
 	case v.native:
 		return float64(v.num) / 1000000
 	case v.negative:
-		return -float64(v.num) * math.Pow10(int(v.offset))
+		if v.offset >= 0 {
+			return -float64(v.num) * math.Pow10(int(v.offset))
+		} else {
+			return -float64(v.num) / math.Pow10(int(-v.offset))
+		}
 	default:
-		return float64(v.num) * math.Pow10(int(v.offset))
+		if v.offset >= 0 {
+			return float64(v.num) * math.Pow10(int(v.offset))
+		} else {
+			return float64(v.num) / math.Pow10(int(-v.offset))
+		}
 	}
 }
 
