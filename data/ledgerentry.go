@@ -244,9 +244,9 @@ type AMM struct {
 	TradingFee  *uint16      `json:",omitempty"`
 	VoteSlots   []VoteEntry  `json:",omitempty"`
 	AuctionSlot *AuctionSlot `json:",omitempty"`
-	Asset       *Hash160     `json:",omitempty"`
-	Asset2      *Hash160     `json:",omitempty"`
-	OwnerNode   *NodeIndex   `json:",omitempty"`
+	//Asset       *Hash160     `json:",omitempty"`
+	//Asset2      *Hash160     `json:",omitempty"`  // "Asset2": { "currency": "XSG", "issuer": "rXSGuKAkUGkPL6iUMJWX1Fi5bogsVYPMs" }
+	OwnerNode *NodeIndex `json:",omitempty"`
 }
 
 func (a *AccountRoot) Affects(account Account) bool {
