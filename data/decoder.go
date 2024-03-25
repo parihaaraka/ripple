@@ -310,6 +310,26 @@ func readObject(r Reader, v *reflect.Value) error {
 				err := readObject(r, &m)
 				v.Set(m.Elem())
 				return err
+			case "AuctionSlot":
+				var slot AuctionSlot
+				s := reflect.ValueOf(&slot)
+				err := readObject(r, &s)
+				v.Elem().FieldByName("AuctionSlot").Set(s)
+				if err != errorEndOfObject {
+					return err
+				}
+			case "AuthAccount":
+				var authAccount AuthAccountItem
+				aa := reflect.ValueOf(&authAccount)
+				err := readObject(r, &aa)
+				v.FieldByName("AuthAccount").Set(aa.Elem())
+				return err
+			case "VoteEntry":
+				var VoteEntry VoteEntryItem
+				ve := reflect.ValueOf(&VoteEntry)
+				err := readObject(r, &ve)
+				v.FieldByName("VoteEntry").Set(ve.Elem())
+				return err
 			case "Memo":
 				var memo Memo
 				m := reflect.ValueOf(&memo)

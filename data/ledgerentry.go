@@ -15,6 +15,7 @@ type AccountRoot struct {
 	leBase
 	Flags                *LedgerEntryFlag `json:",omitempty"`
 	Account              *Account         `json:",omitempty"`
+	AMMID                *Hash256         `json:",omitempty"`
 	Sequence             *uint32          `json:",omitempty"`
 	Balance              *Value           `json:",omitempty"`
 	OwnerCount           *uint32          `json:",omitempty"`
@@ -224,29 +225,43 @@ type NFTokenOffer struct {
 	Expiration       *uint32          `json:",omitempty"`
 }
 
-type VoteEntry struct {
+type VoteEntryItem struct {
 	Account    *Account `json:",omitempty"`
 	TradingFee *uint16  `json:",omitempty"`
 	VoteWeight *uint32  `json:",omitempty"`
 }
 
+type VoteEntry struct {
+	VoteEntry VoteEntryItem `json:",omitempty"`
+}
+
+type AuthAccountItem struct {
+	Account Account `json:",omitempty"`
+}
+
+type AuthAccount struct {
+	AuthAccount AuthAccountItem `json:",omitempty"`
+}
+
 type AuctionSlot struct {
-	Account       *Account  `json:",omitempty"`
-	AuthAccounts  []Account `json:",omitempty"`
-	DiscountedFee *uint32   `json:",omitempty"`
-	Price         *Amount   `json:",omitempty"`
-	Expiration    *uint32   `json:",omitempty"`
+	Account       *Account      `json:",omitempty"`
+	AuthAccounts  []AuthAccount `json:",omitempty"`
+	DiscountedFee *uint16       `json:",omitempty"`
+	Price         *Amount       `json:",omitempty"`
+	Expiration    *uint32       `json:",omitempty"`
 }
 
 type AMM struct {
 	leBase
-	Account     *Account     `json:",omitempty"`
-	TradingFee  *uint16      `json:",omitempty"`
-	VoteSlots   []VoteEntry  `json:",omitempty"`
-	AuctionSlot *AuctionSlot `json:",omitempty"`
-	//Asset       *Hash160     `json:",omitempty"`
-	//Asset2      *Hash160     `json:",omitempty"`  // "Asset2": { "currency": "XSG", "issuer": "rXSGuKAkUGkPL6iUMJWX1Fi5bogsVYPMs" }
-	OwnerNode *NodeIndex `json:",omitempty"`
+	Flags          *LedgerEntryFlag `json:",omitempty"`
+	Account        *Account         `json:",omitempty"`
+	TradingFee     *uint16          `json:",omitempty"`
+	VoteSlots      []VoteEntry      `json:",omitempty"`
+	AuctionSlot    *AuctionSlot     `json:",omitempty"`
+	LPTokenBalance *Amount          `json:",omitempty"`
+	Asset          *Issue           `json:",omitempty"`
+	Asset2         *Issue           `json:",omitempty"`
+	OwnerNode      *NodeIndex       `json:",omitempty"`
 }
 
 func (a *AccountRoot) Affects(account Account) bool {
