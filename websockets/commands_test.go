@@ -74,6 +74,30 @@ func (s *MessagesSuite) TestLedgerResponseWithDIDSetTransaction(c *C) {
 	c.Assert(tx0.MetaData.AffectedNodes, HasLen, 4)
 }
 
+func (s *MessagesSuite) TestLedgerResponseWithOracleSetTransaction(c *C) {
+	msg := &LedgerCommand{}
+	readResponseFile(c, msg, "testdata/ledger_OracleSet_tx.json")
+
+	// Response fields
+	c.Assert(msg.Status, Equals, "success")
+	c.Assert(msg.Type, Equals, "response")
+
+	// Result fields
+	c.Assert(msg.Result.Ledger.LedgerSequence, Equals, uint32(91833494))
+	c.Assert(msg.Result.Ledger.CloseTime.String(), Equals, "2024-Nov-02 07:20:00 UTC")
+	c.Assert(msg.Result.Ledger.Closed, Equals, true)
+	c.Assert(msg.Result.Ledger.LedgerHash.String(), Equals, "24977C8ACA83D1FB667DB39BDB97C2616B1BC711C980DDAEB708FE9467032C05")
+	c.Assert(msg.Result.Ledger.PreviousLedger.String(), Equals, "F827D07203DB30BF8E852F55F3D94A24408CBDFD64CCA0EBB0B078F686182BBD")
+	c.Assert(msg.Result.Ledger.TotalXRP, Equals, uint64(99987019809399404))
+	c.Assert(msg.Result.Ledger.StateHash.String(), Equals, "DCC7EB8349810C1A0876D1B3D36CBB7F67276E900C88E105E1713633B997672D")
+	c.Assert(msg.Result.Ledger.TransactionHash.String(), Equals, "EA18D87E62D1D82FCA75875D340D7792B9E3073133876D4B9371102BCB81D2F4")
+
+	c.Assert(msg.Result.Ledger.Transactions, HasLen, 40)
+	tx0 := msg.Result.Ledger.Transactions[0]
+	c.Assert(tx0.GetHash().String(), Equals, "014B5D65F810BCCD6FB53177AF4035FBE5CFA200F8AEFCE886BE09CE7813C9C6")
+	c.Assert(tx0.MetaData.AffectedNodes, HasLen, 4)
+}
+
 func (s *MessagesSuite) TestLedgerHeaderResponse(c *C) {
 	msg := &LedgerHeaderCommand{}
 	readResponseFile(c, msg, "testdata/ledger_header.json")
