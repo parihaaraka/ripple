@@ -98,6 +98,35 @@ func (s *MessagesSuite) TestLedgerResponseWithOracleSetTransaction(c *C) {
 	c.Assert(tx0.MetaData.AffectedNodes, HasLen, 4)
 }
 
+func (s *MessagesSuite) TestLedgerResponseWithNFTokenModifyTransaction(c *C) {
+	msg := &LedgerCommand{}
+	readResponseFile(c, msg, "testdata/ledger_NFTokenModify_tx.json")
+
+	// Response fields
+	c.Assert(msg.Status, Equals, "success")
+	c.Assert(msg.Type, Equals, "response")
+
+	// Result fields
+	c.Assert(msg.Result.Ledger.LedgerSequence, Equals, uint32(96729412))
+	c.Assert(msg.Result.Ledger.CloseTime.String(), Equals, "2025-Jun-11 05:16:10 UTC")
+	c.Assert(msg.Result.Ledger.Closed, Equals, true)
+	c.Assert(msg.Result.Ledger.LedgerHash.String(), Equals, "887DA6F5E0A59ABFBD0130A781A7665318D29D4BF4EEEC703A575E986D57078F")
+
+	c.Assert(msg.Result.Ledger.Transactions, HasLen, 1)
+	tx0 := msg.Result.Ledger.Transactions[0]
+	c.Assert(tx0.GetHash().String(), Equals, "09D2CFA2D2D239408204E359A85A19324B4B4C915FE9ABE0244B583E98BBE281")
+	c.Assert(tx0.MetaData.AffectedNodes, HasLen, 2)
+
+	// Check that this is specifically an NFTokenModify transaction
+	nftModify := tx0.Transaction.(*data.NFTokenModify)
+	c.Assert(nftModify.GetTransactionType(), Equals, data.NFTOKEN_MODIFY)
+	c.Assert(nftModify.NFTokenID.String(), Equals, "0018000025B89F24B381CABA5921FF0B634DE9111D915B2A4E84C37C000008E1")
+	c.Assert(nftModify.URI.String(), Equals, "7B226E616D65223A225365636F6E6420506C616365204D6564616C222C226465736372697074696F6E223A22552B3146393438222C22696D616765223A22646174613A696D6167652F7376672B786D6C2C25336373766720786D6C6E733D27687474703A2F2F7777772E77332E6F72672F323030302F737667272076696577426F783D272D3430202D3430203830203830272533652533637465787420646F6D696E616E742D626173656C696E653D2763656E7472616C2720746578742D616E63686F723D276D6964646C652720666F6E742D73697A653D27363527253365F09FA5882533632F746578742533652533632F737667253365227D")
+	c.Assert(nftModify.Account.String(), Equals, "rhSTwqSK13zdRmzHMZZP8i7DnuG27pwX76")
+	c.Assert(nftModify.Sequence, Equals, uint32(2781))
+	c.Assert(nftModify.Fee.String(), Equals, "0.000012")
+}
+
 func (s *MessagesSuite) TestLedgerHeaderResponse(c *C) {
 	msg := &LedgerHeaderCommand{}
 	readResponseFile(c, msg, "testdata/ledger_header.json")
