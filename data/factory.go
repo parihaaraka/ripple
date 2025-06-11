@@ -60,6 +60,7 @@ const (
 	NFTOKEN_CANCEL_OFFER                  TransactionType = 28
 	NFTOKEN_ACCEPT_OFFER                  TransactionType = 29
 	CLAWBACK                              TransactionType = 30
+	NFTOKEN_MODIFY                        TransactionType = 31
 	AMM_CREATE                            TransactionType = 35
 	AMM_DEPOSIT                           TransactionType = 36
 	AMM_WITHDRAW                          TransactionType = 37
@@ -139,6 +140,7 @@ var TxFactory = [...]func() Transaction{
 	SET_DEPOSIT_PREAUTH:  func() Transaction { return &SetDepositPreAuth{TxBase: TxBase{TransactionType: SET_DEPOSIT_PREAUTH}} },
 	NFTOKEN_MINT:         func() Transaction { return &NFTokenMint{TxBase: TxBase{TransactionType: NFTOKEN_MINT}} },
 	NFTOKEN_BURN:         func() Transaction { return &NFTokenBurn{TxBase: TxBase{TransactionType: NFTOKEN_BURN}} },
+	NFTOKEN_MODIFY:       func() Transaction { return &NFTokenModify{TxBase: TxBase{TransactionType: NFTOKEN_MODIFY}} },
 	NFTOKEN_CREATE_OFFER: func() Transaction { return &NFTokenCreateOffer{TxBase: TxBase{TransactionType: NFTOKEN_CREATE_OFFER}} },
 	NFTOKEN_CANCEL_OFFER: func() Transaction { return &NFTCancelOffer{TxBase: TxBase{TransactionType: NFTOKEN_CANCEL_OFFER}} },
 	NFTOKEN_ACCEPT_OFFER: func() Transaction { return &NFTAcceptOffer{TxBase: TxBase{TransactionType: NFTOKEN_ACCEPT_OFFER}} },
@@ -250,6 +252,7 @@ var txNames = [...]string{
 	SET_DEPOSIT_PREAUTH:                   "DepositPreauth",
 	NFTOKEN_MINT:                          "NFTokenMint",
 	NFTOKEN_BURN:                          "NFTokenBurn",
+	NFTOKEN_MODIFY:                        "NFTokenModify",
 	NFTOKEN_CREATE_OFFER:                  "NFTokenCreateOffer",
 	NFTOKEN_CANCEL_OFFER:                  "NFTokenCancelOffer",
 	NFTOKEN_ACCEPT_OFFER:                  "NFTokenAcceptOffer",
@@ -299,6 +302,7 @@ var txTypes = map[string]TransactionType{
 	"DepositPreauth":                    SET_DEPOSIT_PREAUTH,
 	"NFTokenMint":                       NFTOKEN_MINT,
 	"NFTokenBurn":                       NFTOKEN_BURN,
+	"NFTokenModify":                     NFTOKEN_MODIFY,
 	"NFTokenCreateOffer":                NFTOKEN_CREATE_OFFER,
 	"NFTokenCancelOffer":                NFTOKEN_CANCEL_OFFER,
 	"NFTokenAcceptOffer":                NFTOKEN_ACCEPT_OFFER,

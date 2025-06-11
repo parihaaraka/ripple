@@ -328,8 +328,16 @@ type NFTokenMint struct {
 
 type NFTokenBurn struct {
 	TxBase
+	NFTokenID      *Hash256 `json:",omitempty"`
 	Owner          *Account `json:",omitempty"`
 	TicketSequence *uint32  `json:",omitempty"`
+}
+
+type NFTokenModify struct {
+	TxBase
+	NFTokenID      *Hash256        `json:",omitempty"`
+	URI            *VariableLength `json:",omitempty"`
+	TicketSequence *uint32         `json:",omitempty"`
 }
 
 type NFTokenCreateOffer struct {
