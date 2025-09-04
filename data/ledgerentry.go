@@ -162,9 +162,9 @@ type Credential struct {
 	CredentialType    *VariableLength `json:",omitempty"`
 	Expiration        *uint32         `json:",omitempty"`
 	Issuer            *Account        `json:",omitempty"`
-	IssuerNode        uint64          `json:",omitempty"`
+	IssuerNode        string          `json:",omitempty"`
 	PreviousTxnID     Hash256         `json:",omitempty"`
-	PreviousTxnLgrSeq uint32
+	PreviousTxnLgrSeq *uint32         `json:",omitempty"`
 	Subject           *Account        `json:",omitempty"`
 	SubjectNode       string          `json:",omitempty"`
 	URI               *VariableLength `json:",omitempty"`
