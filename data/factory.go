@@ -31,6 +31,7 @@ const (
 	TICKET                               LedgerEntryType = 0x54 // 'T'
 	XCHAIN_OWNED_CLAIM_ID                LedgerEntryType = 0x71 // 'q'
 	XCHAIN_OWNED_CREATE_ACCOUNT_CLAIM_ID LedgerEntryType = 0x74
+	CREDENTIAL                           LedgerEntryType = 0x89
 
 	// TransactionType values come from rippled's "TxFormats.h"
 	// https://xrpl.org/docs/references/protocol/transactions/types#transaction-types
@@ -79,6 +80,7 @@ const (
 	XCHAIN_CREATE_BRIDGE                  TransactionType = 50
 	XCHAIN_CREATE_CLAIM_ID                TransactionType = 51
 	XCHAIN_MODIFY_BRIDGE                  TransactionType = 52
+	CREDENTIAL_CREATE                     TransactionType = 53
 	AMENDMENT                             TransactionType = 100
 	SET_FEE                               TransactionType = 101
 	UNL_MODIFY                            TransactionType = 102
@@ -113,6 +115,7 @@ var LedgerEntryFactory = [...]func() LedgerEntry{
 	XCHAIN_OWNED_CREATE_ACCOUNT_CLAIM_ID: func() LedgerEntry {
 		return &XChainOwnedCreateAccountClaimID{leBase: leBase{LedgerEntryType: XCHAIN_OWNED_CREATE_ACCOUNT_CLAIM_ID}}
 	},
+	CREDENTIAL: func() LedgerEntry { return &Credential{leBase: leBase{LedgerEntryType: CREDENTIAL}} },
 }
 
 var TxFactory = [...]func() Transaction{
@@ -153,6 +156,7 @@ var TxFactory = [...]func() Transaction{
 	AMM_DELETE:           func() Transaction { return &AMMDelete{TxBase: TxBase{TransactionType: AMM_DELETE}} },
 	DID_SET:              func() Transaction { return &DidSet{TxBase: TxBase{TransactionType: DID_SET}} },
 	DID_DELETE:           func() Transaction { return &DidDelete{TxBase: TxBase{TransactionType: DID_DELETE}} },
+	CREDENTIAL_CREATE:    func() Transaction { return &CredentialCreate{TxBase: TxBase{TransactionType: CREDENTIAL_CREATE}} },
 	ORACLE_SET:           func() Transaction { return &OracleSet{TxBase: TxBase{TransactionType: ORACLE_SET}} },
 	ORACLE_DELETE:        func() Transaction { return &OracleDelete{TxBase: TxBase{TransactionType: ORACLE_DELETE}} },
 	XCHAIN_ACCOUNT_CREATE_COMMIT: func() Transaction {
@@ -200,6 +204,7 @@ var ledgerEntryNames = [...]string{
 	TICKET:                               "Ticket",
 	XCHAIN_OWNED_CLAIM_ID:                "XChainOwnedClaimID",
 	XCHAIN_OWNED_CREATE_ACCOUNT_CLAIM_ID: "XChainOwnedCreateAccountClaimID",
+	CREDENTIAL:                           "Credential",
 }
 
 var ledgerEntryTypes = map[string]LedgerEntryType{
@@ -225,6 +230,7 @@ var ledgerEntryTypes = map[string]LedgerEntryType{
 	"Ticket":                          TICKET,
 	"XChainOwnedClaimID":              XCHAIN_OWNED_CLAIM_ID,
 	"XChainOwnedCreateAccountClaimID": XCHAIN_OWNED_CREATE_ACCOUNT_CLAIM_ID,
+	"Credential":                      CREDENTIAL,
 }
 
 var txNames = [...]string{
@@ -275,6 +281,7 @@ var txNames = [...]string{
 	XCHAIN_CREATE_BRIDGE:                  "XChainCreateBridge",
 	XCHAIN_CREATE_CLAIM_ID:                "XChainCreateClaimID",
 	XCHAIN_MODIFY_BRIDGE:                  "XChainModifyBridge",
+	CREDENTIAL_CREATE:                     "CredentialCreate",
 }
 
 var txTypes = map[string]TransactionType{
@@ -325,6 +332,7 @@ var txTypes = map[string]TransactionType{
 	"XChainCreateBridge":                XCHAIN_CREATE_BRIDGE,
 	"XChainCreateClaimID":               XCHAIN_CREATE_CLAIM_ID,
 	"XChainModifyBridge":                XCHAIN_MODIFY_BRIDGE,
+	"CredentialCreate":                  CREDENTIAL_CREATE,
 }
 
 var HashableTypes []string
