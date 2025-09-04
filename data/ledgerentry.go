@@ -157,6 +157,19 @@ type SignerList struct {
 	SignerListID  *uint32          `json:",omitempty"`
 }
 
+type Credential struct {
+	leBase
+	CredentialType    *VariableLength `json:",omitempty"`
+	Expiration        *uint32         `json:",omitempty"`
+	Issuer            *Account        `json:",omitempty"`
+	IssuerNode        uint64          `json:",omitempty"`
+	PreviousTxnID     Hash256         `json:",omitempty"`
+	PreviousTxnLgrSeq uint32
+	Subject           *Account        `json:",omitempty"`
+	SubjectNode       string          `json:",omitempty"`
+	URI               *VariableLength `json:",omitempty"`
+}
+
 type Ticket struct {
 	leBase
 	Flags          *LedgerEntryFlag `json:",omitempty"`
@@ -329,6 +342,9 @@ func (s *SignerList) Affects(account Account) bool {
 		}
 	}
 	return false
+}
+func (c *Credential) Affects(account Account) bool {
+	return c.Issuer != nil && c.Issuer.Equals(account) || c.Subject != nil && c.Subject.Equals(account)
 }
 func (t *Ticket) Affects(account Account) bool { return t.Account != nil && t.Account.Equals(account) }
 func (p *PayChannel) Affects(account Account) bool {

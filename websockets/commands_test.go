@@ -2,6 +2,7 @@ package websockets
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"testing"
 
@@ -125,6 +126,38 @@ func (s *MessagesSuite) TestLedgerResponseWithNFTokenModifyTransaction(c *C) {
 	c.Assert(nftModify.Account.String(), Equals, "rhSTwqSK13zdRmzHMZZP8i7DnuG27pwX76")
 	c.Assert(nftModify.Sequence, Equals, uint32(2781))
 	c.Assert(nftModify.Fee.String(), Equals, "0.000012")
+}
+
+func (s *MessagesSuite) TestLedgerResponseWithCredentialCreateTransaction(c *C) {
+	msg := &LedgerCommand{}
+	readResponseFile(c, msg, "testdata/ledger_credentialCreate_tx.json")
+
+	// Response fields
+	fmt.Printf("msg: %v\n", msg)
+
+	c.Assert(msg.Status, Equals, "success")
+	c.Assert(msg.Type, Equals, "response")
+
+	// Result fields
+	c.Assert(msg.Result.Ledger.LedgerSequence, Equals, uint32(98615996))
+	c.Assert(msg.Result.Ledger.CloseTime.String(), Equals, "2025-Sep-04 04:40:40 UTC")
+	c.Assert(msg.Result.Ledger.Closed, Equals, true)
+	c.Assert(msg.Result.Ledger.LedgerHash.String(), Equals, "311457C92C09A6AFDB2BEDA4967E2BCFE2D8B9E5F472A148B8F91DFA38FF7BDC")
+
+	c.Assert(msg.Result.Ledger.Transactions, HasLen, 88)
+	var tx *data.TransactionWithMetaData
+	for _, txn := range msg.Result.Ledger.Transactions {
+		if txn.MetaData.TransactionIndex == 49 { // CreateCredential has the index 49 but they are not ordered
+			tx = txn
+		}
+	}
+
+	c.Assert(tx.GetHash().String(), Equals, "F919D0BEA7328A55FE9B218CCB7F9AB9A2F48C789E0BDBE9AFA542E2EA4D1E2F")
+	c.Assert(tx.MetaData.AffectedNodes, HasLen, 4)
+
+	// Check that this is specifically a CreateCredential transaction
+	CredentialCreate := tx.Transaction.(*data.CredentialCreate)
+	c.Assert(CredentialCreate.GetTransactionType(), Equals, data.CREDENTIAL_CREATE)
 }
 
 func (s *MessagesSuite) TestLedgerHeaderResponse(c *C) {
