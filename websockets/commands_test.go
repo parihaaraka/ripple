@@ -2,10 +2,11 @@ package websockets
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"testing"
 
-	"github.com/rubblelabs/ripple/data"
+	"github.com/anchorageoss/ripple-client/data"
 	. "gopkg.in/check.v1"
 )
 
@@ -36,10 +37,9 @@ func (s *MessagesSuite) TestLedgerResponse(c *C) {
 
 	// Result fields
 	c.Assert(msg.Result.Ledger.LedgerSequence, Equals, uint32(6917762))
-	c.Assert(msg.Result.Ledger.Accepted, Equals, true)
 	c.Assert(msg.Result.Ledger.CloseTime.String(), Equals, "2014-May-30 13:11:50 UTC")
 	c.Assert(msg.Result.Ledger.Closed, Equals, true)
-	c.Assert(msg.Result.Ledger.Hash.String(), Equals, "0C5C5B39EA40D40ACA6EB47E50B2B85FD516D1A2BA67BA3E050349D3EF3632A4")
+	c.Assert(msg.Result.Ledger.LedgerHash.String(), Equals, "0C5C5B39EA40D40ACA6EB47E50B2B85FD516D1A2BA67BA3E050349D3EF3632A4")
 	c.Assert(msg.Result.Ledger.PreviousLedger.String(), Equals, "F8F0363803C30E659AA24D6A62A6512BA24BEA5AC52A29731ABA1E2D80796E8B")
 	c.Assert(msg.Result.Ledger.TotalXRP, Equals, uint64(99999990098968782))
 	c.Assert(msg.Result.Ledger.StateHash.String(), Equals, "46D3E36FE845B9A18293F4C0F134D7DAFB06D4D9A1C7E4CB03F8B293CCA45FA0")
@@ -49,6 +49,115 @@ func (s *MessagesSuite) TestLedgerResponse(c *C) {
 	tx0 := msg.Result.Ledger.Transactions[0]
 	c.Assert(tx0.GetHash().String(), Equals, "2D0CE11154B655A2BFE7F3F857AAC344622EC7DAB11B1EBD920DCDB00E8646FF")
 	c.Assert(tx0.MetaData.AffectedNodes, HasLen, 4)
+}
+
+func (s *MessagesSuite) TestLedgerResponseWithDIDSetTransaction(c *C) {
+	msg := &LedgerCommand{}
+	readResponseFile(c, msg, "testdata/ledger_DIDSet_tx.json")
+
+	// Response fields
+	c.Assert(msg.Status, Equals, "success")
+	c.Assert(msg.Type, Equals, "response")
+
+	// Result fields
+	c.Assert(msg.Result.Ledger.LedgerSequence, Equals, uint32(91781709))
+	c.Assert(msg.Result.Ledger.CloseTime.String(), Equals, "2024-Oct-30 23:22:21 UTC")
+	c.Assert(msg.Result.Ledger.Closed, Equals, true)
+	c.Assert(msg.Result.Ledger.LedgerHash.String(), Equals, "D40AA9E74A6345D737841FF9CB013DCBBB9824D70A8F7F0A1B182B4435723D08")
+	c.Assert(msg.Result.Ledger.PreviousLedger.String(), Equals, "66C936B5C953E324C0118733A625EBB187D1E242BC9A3FB169CDB370959BC0AD")
+	c.Assert(msg.Result.Ledger.TotalXRP, Equals, uint64(99987028538007593))
+	c.Assert(msg.Result.Ledger.StateHash.String(), Equals, "3A8341781AAAF05C84E90BAB4BF0C09899790B831A00A6E236A1627314FE7578")
+	c.Assert(msg.Result.Ledger.TransactionHash.String(), Equals, "ED48F333B8E4233A55975C62C1C88DF88957F7BAE61B534CF5CAE2B21D6AE310")
+
+	c.Assert(msg.Result.Ledger.Transactions, HasLen, 36)
+	tx0 := msg.Result.Ledger.Transactions[0]
+	c.Assert(tx0.GetHash().String(), Equals, "0AF92DA7B9768692416FD447A7569AAE263D729E5418FFB9268E6A43B5480E59")
+	c.Assert(tx0.MetaData.AffectedNodes, HasLen, 4)
+}
+
+func (s *MessagesSuite) TestLedgerResponseWithOracleSetTransaction(c *C) {
+	msg := &LedgerCommand{}
+	readResponseFile(c, msg, "testdata/ledger_OracleSet_tx.json")
+
+	// Response fields
+	c.Assert(msg.Status, Equals, "success")
+	c.Assert(msg.Type, Equals, "response")
+
+	// Result fields
+	c.Assert(msg.Result.Ledger.LedgerSequence, Equals, uint32(91833494))
+	c.Assert(msg.Result.Ledger.CloseTime.String(), Equals, "2024-Nov-02 07:20:00 UTC")
+	c.Assert(msg.Result.Ledger.Closed, Equals, true)
+	c.Assert(msg.Result.Ledger.LedgerHash.String(), Equals, "24977C8ACA83D1FB667DB39BDB97C2616B1BC711C980DDAEB708FE9467032C05")
+	c.Assert(msg.Result.Ledger.PreviousLedger.String(), Equals, "F827D07203DB30BF8E852F55F3D94A24408CBDFD64CCA0EBB0B078F686182BBD")
+	c.Assert(msg.Result.Ledger.TotalXRP, Equals, uint64(99987019809399404))
+	c.Assert(msg.Result.Ledger.StateHash.String(), Equals, "DCC7EB8349810C1A0876D1B3D36CBB7F67276E900C88E105E1713633B997672D")
+	c.Assert(msg.Result.Ledger.TransactionHash.String(), Equals, "EA18D87E62D1D82FCA75875D340D7792B9E3073133876D4B9371102BCB81D2F4")
+
+	c.Assert(msg.Result.Ledger.Transactions, HasLen, 40)
+	tx0 := msg.Result.Ledger.Transactions[0]
+	c.Assert(tx0.GetHash().String(), Equals, "014B5D65F810BCCD6FB53177AF4035FBE5CFA200F8AEFCE886BE09CE7813C9C6")
+	c.Assert(tx0.MetaData.AffectedNodes, HasLen, 4)
+}
+
+func (s *MessagesSuite) TestLedgerResponseWithNFTokenModifyTransaction(c *C) {
+	msg := &LedgerCommand{}
+	readResponseFile(c, msg, "testdata/ledger_NFTokenModify_tx.json")
+
+	// Response fields
+	c.Assert(msg.Status, Equals, "success")
+	c.Assert(msg.Type, Equals, "response")
+
+	// Result fields
+	c.Assert(msg.Result.Ledger.LedgerSequence, Equals, uint32(96729412))
+	c.Assert(msg.Result.Ledger.CloseTime.String(), Equals, "2025-Jun-11 05:16:10 UTC")
+	c.Assert(msg.Result.Ledger.Closed, Equals, true)
+	c.Assert(msg.Result.Ledger.LedgerHash.String(), Equals, "887DA6F5E0A59ABFBD0130A781A7665318D29D4BF4EEEC703A575E986D57078F")
+
+	c.Assert(msg.Result.Ledger.Transactions, HasLen, 1)
+	tx0 := msg.Result.Ledger.Transactions[0]
+	c.Assert(tx0.GetHash().String(), Equals, "09D2CFA2D2D239408204E359A85A19324B4B4C915FE9ABE0244B583E98BBE281")
+	c.Assert(tx0.MetaData.AffectedNodes, HasLen, 2)
+
+	// Check that this is specifically an NFTokenModify transaction
+	nftModify := tx0.Transaction.(*data.NFTokenModify)
+	c.Assert(nftModify.GetTransactionType(), Equals, data.NFTOKEN_MODIFY)
+	c.Assert(nftModify.NFTokenID.String(), Equals, "0018000025B89F24B381CABA5921FF0B634DE9111D915B2A4E84C37C000008E1")
+	c.Assert(nftModify.URI.String(), Equals, "7B226E616D65223A225365636F6E6420506C616365204D6564616C222C226465736372697074696F6E223A22552B3146393438222C22696D616765223A22646174613A696D6167652F7376672B786D6C2C25336373766720786D6C6E733D27687474703A2F2F7777772E77332E6F72672F323030302F737667272076696577426F783D272D3430202D3430203830203830272533652533637465787420646F6D696E616E742D626173656C696E653D2763656E7472616C2720746578742D616E63686F723D276D6964646C652720666F6E742D73697A653D27363527253365F09FA5882533632F746578742533652533632F737667253365227D")
+	c.Assert(nftModify.Account.String(), Equals, "rhSTwqSK13zdRmzHMZZP8i7DnuG27pwX76")
+	c.Assert(nftModify.Sequence, Equals, uint32(2781))
+	c.Assert(nftModify.Fee.String(), Equals, "0.000012")
+}
+
+func (s *MessagesSuite) TestLedgerResponseWithCredentialCreateTransaction(c *C) {
+	msg := &LedgerCommand{}
+	readResponseFile(c, msg, "testdata/ledger_credentialCreate_tx.json")
+
+	// Response fields
+	fmt.Printf("msg: %v\n", msg)
+
+	c.Assert(msg.Status, Equals, "success")
+	c.Assert(msg.Type, Equals, "response")
+
+	// Result fields
+	c.Assert(msg.Result.Ledger.LedgerSequence, Equals, uint32(98615996))
+	c.Assert(msg.Result.Ledger.CloseTime.String(), Equals, "2025-Sep-04 04:40:40 UTC")
+	c.Assert(msg.Result.Ledger.Closed, Equals, true)
+	c.Assert(msg.Result.Ledger.LedgerHash.String(), Equals, "311457C92C09A6AFDB2BEDA4967E2BCFE2D8B9E5F472A148B8F91DFA38FF7BDC")
+
+	c.Assert(msg.Result.Ledger.Transactions, HasLen, 88)
+	var tx *data.TransactionWithMetaData
+	for _, txn := range msg.Result.Ledger.Transactions {
+		if txn.MetaData.TransactionIndex == 49 { // CreateCredential has the index 49 but they are not ordered
+			tx = txn
+		}
+	}
+
+	c.Assert(tx.GetHash().String(), Equals, "F919D0BEA7328A55FE9B218CCB7F9AB9A2F48C789E0BDBE9AFA542E2EA4D1E2F")
+	c.Assert(tx.MetaData.AffectedNodes, HasLen, 4)
+
+	// Check that this is specifically a CreateCredential transaction
+	CredentialCreate := tx.Transaction.(*data.CredentialCreate)
+	c.Assert(CredentialCreate.GetTransactionType(), Equals, data.CREDENTIAL_CREATE)
 }
 
 func (s *MessagesSuite) TestLedgerHeaderResponse(c *C) {
@@ -66,7 +175,7 @@ func (s *MessagesSuite) TestLedgerHeaderResponse(c *C) {
 	c.Assert(msg.Result.Ledger.Accepted, Equals, true)
 	c.Assert(msg.Result.Ledger.CloseTime.String(), Equals, "2013-Jan-01 03:21:10 UTC")
 	c.Assert(msg.Result.Ledger.Closed, Equals, true)
-	c.Assert(msg.Result.Ledger.Hash.String(), Equals, "4109C6F2045FC7EFF4CDE8F9905D19C28820D86304080FF886B299F0206E42B5")
+	c.Assert(msg.Result.Ledger.LedgerHash.String(), Equals, "4109C6F2045FC7EFF4CDE8F9905D19C28820D86304080FF886B299F0206E42B5")
 	c.Assert(msg.Result.Ledger.PreviousLedger.String(), Equals, "60A01EBF11537D8394EA1235253293508BDA7131D5F8710EFE9413AA129653A2")
 	c.Assert(msg.Result.Ledger.TotalXRP, Equals, uint64(99999999999996320))
 	c.Assert(msg.Result.Ledger.StateHash.String(), Equals, "3806AF8F22037DE598D30D38C8861FADF391171D26F7DE34ACFA038996EA6BEB")

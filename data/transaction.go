@@ -131,6 +131,62 @@ type AMMDelete struct {
 	Asset2 Asset
 }
 
+type CredentialCreate struct {
+	TxBase
+	Subject        Account
+	CredentialType *VariableLength `json:",omitempty"`
+	Expiration     *uint32         `json:",omitempty"`
+	URI            *VariableLength `json:",omitempty"`
+}
+
+type DidSet struct {
+	TxBase
+}
+
+type DidDelete struct {
+	TxBase
+}
+
+type OracleSet struct {
+	TxBase
+}
+
+type OracleDelete struct {
+	TxBase
+}
+
+type XChainAccountCreateCommit struct {
+	TxBase
+}
+
+type XChainAddAccountCreateAttestation struct {
+	TxBase
+}
+
+type XChainAddClaimAttestation struct {
+	TxBase
+}
+
+type XChainClaim struct {
+	TxBase
+}
+
+type XChainCommit struct {
+	TxBase
+}
+
+type XChainCreateBridge struct {
+	TxBase
+}
+
+type XChainCreateClaimID struct {
+	TxBase
+}
+
+type XChainModifyBridge struct {
+	TxBase
+}
+
 type TrustSet struct {
 	TxBase
 	LimitAmount    Amount
@@ -280,8 +336,16 @@ type NFTokenMint struct {
 
 type NFTokenBurn struct {
 	TxBase
+	NFTokenID      *Hash256 `json:",omitempty"`
 	Owner          *Account `json:",omitempty"`
 	TicketSequence *uint32  `json:",omitempty"`
+}
+
+type NFTokenModify struct {
+	TxBase
+	NFTokenID      *Hash256        `json:",omitempty"`
+	URI            *VariableLength `json:",omitempty"`
+	TicketSequence *uint32         `json:",omitempty"`
 }
 
 type NFTokenCreateOffer struct {

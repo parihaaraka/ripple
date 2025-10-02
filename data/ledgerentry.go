@@ -157,6 +157,19 @@ type SignerList struct {
 	SignerListID  *uint32          `json:",omitempty"`
 }
 
+type Credential struct {
+	leBase
+	CredentialType    *VariableLength `json:",omitempty"`
+	Expiration        *uint32         `json:",omitempty"`
+	Issuer            *Account        `json:",omitempty"`
+	IssuerNode        string          `json:",omitempty"`
+	PreviousTxnID     Hash256         `json:",omitempty"`
+	PreviousTxnLgrSeq *uint32         `json:",omitempty"`
+	Subject           *Account        `json:",omitempty"`
+	SubjectNode       string          `json:",omitempty"`
+	URI               *VariableLength `json:",omitempty"`
+}
+
 type Ticket struct {
 	leBase
 	Flags          *LedgerEntryFlag `json:",omitempty"`
@@ -264,6 +277,49 @@ type AMM struct {
 	OwnerNode      *NodeIndex       `json:",omitempty"`
 }
 
+type Bridge struct {
+	leBase
+	Flags   *LedgerEntryFlag `json:",omitempty"`
+	Account *Account         `json:",omitempty"`
+}
+
+func (b *Bridge) Affects(account Account) bool {
+	return b.Account.Equals(account)
+}
+
+type Did struct {
+	leBase
+	Account *Account `json:",omitempty"`
+}
+
+func (d *Did) Affects(account Account) bool {
+	return d.Account.Equals(account)
+}
+
+type Oracle struct {
+	leBase
+}
+
+func (o *Oracle) Affects(account Account) bool { return false }
+
+type XChainOwnedClaimID struct {
+	leBase
+	Account *Account `json:",omitempty"`
+}
+
+func (x *XChainOwnedClaimID) Affects(account Account) bool {
+	return x.Account.Equals(account)
+}
+
+type XChainOwnedCreateAccountClaimID struct {
+	leBase
+	Account *Account `json:",omitempty"`
+}
+
+func (x *XChainOwnedCreateAccountClaimID) Affects(account Account) bool {
+	return x.Account.Equals(account)
+}
+
 func (a *AccountRoot) Affects(account Account) bool {
 	return a.Account != nil && a.Account.Equals(account)
 }
@@ -286,6 +342,9 @@ func (s *SignerList) Affects(account Account) bool {
 		}
 	}
 	return false
+}
+func (c *Credential) Affects(account Account) bool {
+	return c.Issuer != nil && c.Issuer.Equals(account) || c.Subject != nil && c.Subject.Equals(account)
 }
 func (t *Ticket) Affects(account Account) bool { return t.Account != nil && t.Account.Equals(account) }
 func (p *PayChannel) Affects(account Account) bool {
