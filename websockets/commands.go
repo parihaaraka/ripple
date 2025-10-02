@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync/atomic"
 
-	"github.com/anchorageoss/ripple-client/data"
+	"github.com/parihaaraka/ripple/data"
 )
 
 var counter uint64

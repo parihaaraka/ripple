@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/anchorageoss/ripple-client/config"
+	"github.com/parihaaraka/ripple/config"
 )
 
 var (

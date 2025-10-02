@@ -3,7 +3,7 @@ package websockets
 import (
 	"encoding/json"
 
-	"github.com/anchorageoss/ripple-client/data"
+	"github.com/parihaaraka/ripple/data"
 )
 
 // Fields from subscribed ledger stream messages

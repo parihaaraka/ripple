@@ -2,7 +2,7 @@
 
 Go packages to interact with the Ripple protocol.
 
-[![Go Reference](https://pkg.go.dev/badge/github.com/anchorageoss/ripple-client.svg)](https://pkg.go.dev/github.com/anchorageoss/ripple-client)
+[![Go Reference](https://pkg.go.dev/badge/github.com/parihaaraka/ripple.svg)](https://pkg.go.dev/github.com/parihaaraka/ripple)
 
 The data, crypto, and websockets packages are very functional and quite well tested. Most websockets commands are implemented but not all.
 

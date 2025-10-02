@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/anchorageoss/ripple-client/data"
-	"github.com/anchorageoss/ripple-client/terminal"
-	"github.com/anchorageoss/ripple-client/websockets"
+	"github.com/parihaaraka/ripple/data"
+	"github.com/parihaaraka/ripple/terminal"
+	"github.com/parihaaraka/ripple/websockets"
 )
 
 func checkErr(err error, quit bool) {
