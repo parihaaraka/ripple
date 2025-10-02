@@ -187,6 +187,14 @@ type XChainModifyBridge struct {
 	TxBase
 }
 
+type MPTokenIssuanceCreate struct {
+	TxBase
+	AssetScale      *uint8          `json:",omitempty"`
+	MaximumAmount   *Amount         `json:",omitempty"`
+	TransferFee     *uint16         `json:",omitempty"`
+	MPTokenMetadata *VariableLength `json:",omitempty"`
+}
+
 type TrustSet struct {
 	TxBase
 	LimitAmount    Amount

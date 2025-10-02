@@ -81,6 +81,7 @@ const (
 	XCHAIN_CREATE_CLAIM_ID                TransactionType = 51
 	XCHAIN_MODIFY_BRIDGE                  TransactionType = 52
 	CREDENTIAL_CREATE                     TransactionType = 53
+	MPTOKEN_ISSUANCE_CREATE               TransactionType = 54
 	AMENDMENT                             TransactionType = 100
 	SET_FEE                               TransactionType = 101
 	UNL_MODIFY                            TransactionType = 102
@@ -178,6 +179,9 @@ var TxFactory = [...]func() Transaction{
 	},
 	XCHAIN_MODIFY_BRIDGE: func() Transaction {
 		return &XChainModifyBridge{TxBase: TxBase{TransactionType: XCHAIN_MODIFY_BRIDGE}}
+	},
+	MPTOKEN_ISSUANCE_CREATE: func() Transaction {
+		return &MPTokenIssuanceCreate{TxBase: TxBase{TransactionType: MPTOKEN_ISSUANCE_CREATE}}
 	},
 }
 
@@ -333,6 +337,7 @@ var txTypes = map[string]TransactionType{
 	"XChainCreateClaimID":               XCHAIN_CREATE_CLAIM_ID,
 	"XChainModifyBridge":                XCHAIN_MODIFY_BRIDGE,
 	"CredentialCreate":                  CREDENTIAL_CREATE,
+	"MPTokenIssuanceCreate":             MPTOKEN_ISSUANCE_CREATE,
 }
 
 var HashableTypes []string
