@@ -199,6 +199,11 @@ type MPTokenIssuance struct {
 	TxBase
 }
 
+type MPTokenIssuanceDestroy struct {
+	TxBase
+	MPTokenIssuanceID *VariableLength `json:",omitempty"`
+}
+
 type TrustSet struct {
 	TxBase
 	LimitAmount    Amount

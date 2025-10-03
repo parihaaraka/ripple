@@ -83,6 +83,7 @@ const (
 	CREDENTIAL_CREATE                     TransactionType = 53
 	MPTOKEN_ISSUANCE_CREATE               TransactionType = 54
 	MPTOKEN_ISSUANCE                      TransactionType = 55
+	MPTOKEN_ISSUANCE_DESTROY              TransactionType = 56
 	AMENDMENT                             TransactionType = 100
 	SET_FEE                               TransactionType = 101
 	UNL_MODIFY                            TransactionType = 102
@@ -186,6 +187,9 @@ var TxFactory = [...]func() Transaction{
 	},
 	MPTOKEN_ISSUANCE: func() Transaction {
 		return &MPTokenIssuance{TxBase: TxBase{TransactionType: MPTOKEN_ISSUANCE}}
+	},
+	MPTOKEN_ISSUANCE_DESTROY: func() Transaction {
+		return &MPTokenIssuanceDestroy{TxBase: TxBase{TransactionType: MPTOKEN_ISSUANCE_DESTROY}}
 	},
 }
 
@@ -343,6 +347,7 @@ var txTypes = map[string]TransactionType{
 	"CredentialCreate":                  CREDENTIAL_CREATE,
 	"MPTokenIssuanceCreate":             MPTOKEN_ISSUANCE_CREATE,
 	"MPTokenIssuance":                   MPTOKEN_ISSUANCE,
+	"MPTokenIssuanceDestroy":            MPTOKEN_ISSUANCE_DESTROY,
 }
 
 var HashableTypes []string
