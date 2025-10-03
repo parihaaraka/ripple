@@ -32,6 +32,7 @@ const (
 	XCHAIN_OWNED_CLAIM_ID                LedgerEntryType = 0x71 // 'q'
 	XCHAIN_OWNED_CREATE_ACCOUNT_CLAIM_ID LedgerEntryType = 0x74
 	CREDENTIAL                           LedgerEntryType = 0x89
+	XMPTOKEN_ISSUANCE                    LedgerEntryType = 0x7e
 
 	// TransactionType values come from rippled's "TxFormats.h"
 	// https://xrpl.org/docs/references/protocol/transactions/types#transaction-types
@@ -119,6 +120,9 @@ var LedgerEntryFactory = [...]func() LedgerEntry{
 		return &XChainOwnedCreateAccountClaimID{leBase: leBase{LedgerEntryType: XCHAIN_OWNED_CREATE_ACCOUNT_CLAIM_ID}}
 	},
 	CREDENTIAL: func() LedgerEntry { return &Credential{leBase: leBase{LedgerEntryType: CREDENTIAL}} },
+	XMPTOKEN_ISSUANCE: func() LedgerEntry {
+		return &XMPTokenIssuance{leBase: leBase{LedgerEntryType: XMPTOKEN_ISSUANCE}}
+	},
 }
 
 var TxFactory = [...]func() Transaction{
@@ -243,6 +247,7 @@ var ledgerEntryTypes = map[string]LedgerEntryType{
 	"XChainOwnedClaimID":              XCHAIN_OWNED_CLAIM_ID,
 	"XChainOwnedCreateAccountClaimID": XCHAIN_OWNED_CREATE_ACCOUNT_CLAIM_ID,
 	"Credential":                      CREDENTIAL,
+	"MPTokenIssuance":                 XMPTOKEN_ISSUANCE,
 }
 
 var txNames = [...]string{

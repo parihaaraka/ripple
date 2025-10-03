@@ -300,7 +300,13 @@ type Oracle struct {
 	leBase
 }
 
+type XMPTokenIssuance struct {
+	leBase
+}
+
 func (o *Oracle) Affects(account Account) bool { return false }
+
+func (o *XMPTokenIssuance) Affects(account Account) bool { return false }
 
 type XChainOwnedClaimID struct {
 	leBase
