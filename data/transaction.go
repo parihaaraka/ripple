@@ -195,6 +195,10 @@ type MPTokenIssuanceCreate struct {
 	MPTokenMetadata *VariableLength `json:",omitempty"`
 }
 
+type MPTokenIssuance struct {
+	TxBase
+}
+
 type TrustSet struct {
 	TxBase
 	LimitAmount    Amount
